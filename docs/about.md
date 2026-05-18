@@ -1,7 +1,5 @@
 # About
 
-I am Joe Pei. This site is where I write through machine learning and deep learning ideas with an emphasis on mechanism, implementation, and clear explanations.
+I am Joe Pei, and this is my technical blog on machine learning and deep learning.
 
-The writing here is organized as technical blog posts rather than private scratch work. Some posts come from working through classical machine learning fundamentals; others come from implementing pieces of transformer language models from scratch.
-
-You can find the source for this site on GitHub once the repository is published.
+I write about the ideas I find most useful for understanding how models work: supervised learning, generalization, optimization, transformer architectures, and implementation details. My focus is on connecting intuition with the underlying mechanics.
