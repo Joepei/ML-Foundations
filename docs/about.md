@@ -1,5 +1,5 @@
 # About
 
-I am Joe Pei, and this is my technical blog on machine learning and deep learning.
+I'm Joe Pei, a data scientist working on applied machine learning and large language model systems. I write about machine learning fundamentals, transformer architectures, retrieval-augmented generation evaluation, and practical implementation details.
 
-I write about the ideas I find most useful for understanding how models work: supervised learning, generalization, optimization, transformer architectures, and implementation details. My focus is on connecting intuition with the underlying mechanics.
+My goal with this site is to connect mathematical intuition, code-level mechanics, and production tradeoffs.
