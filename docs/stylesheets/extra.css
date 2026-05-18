@@ -1,0 +1,23 @@
+:root {
+  --md-text-font: "Inter", "Segoe UI", Arial, sans-serif;
+  --md-code-font: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+}
+
+.md-typeset h1 {
+  font-weight: 720;
+}
+
+.md-typeset h2 {
+  margin-top: 2.2em;
+}
+
+.md-typeset code {
+  font-size: 0.92em;
+}
+
+.md-typeset .lead {
+  color: var(--md-default-fg-color--light);
+  font-size: 1.12rem;
+  line-height: 1.65;
+  max-width: 46rem;
+}

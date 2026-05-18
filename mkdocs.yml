@@ -1,0 +1,48 @@
+site_name: ML Foundations
+site_description: Technical writeups on machine learning fundamentals, transformer architectures, and implementation details.
+site_author: Joe Pei
+repo_name: Joepei/ML-Foundations
+repo_url: https://github.com/Joepei/ML-Foundations
+theme:
+  name: material
+  language: en
+  features:
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: black
+      accent: teal
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+extra_css:
+  - stylesheets/extra.css
+nav:
+  - Home: index.md
+  - About: about.md
+  - Machine Learning:
+      - Overview: machine-learning/index.md
+      - Supervised Learning Fundamentals: machine-learning/supervised-learning-fundamentals.md
+      - Linear Models: machine-learning/linear-models.md
+      - Tree-Based Models: machine-learning/tree-based-models.md
+  - Deep Learning:
+      - Overview: deep-learning/index.md
+      - Tokenization and BPE: deep-learning/tokenization-and-bpe.md
+      - Transformer Architecture: deep-learning/transformer-architecture.md
+      - Training Transformer Language Models: deep-learning/training-transformer-language-models.md
