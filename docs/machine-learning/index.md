@@ -8,4 +8,5 @@ The starting point is a broad ML review notebook, converted into shorter topic-f
 
 - [Supervised Learning Fundamentals](supervised-learning-fundamentals.md)
 - [Linear Models](linear-models.md)
+- [Regularization](regularization.md)
 - [Tree-Based Models](tree-based-models.md)

@@ -41,6 +41,7 @@ nav:
       - Overview: machine-learning/index.md
       - Supervised Learning Fundamentals: machine-learning/supervised-learning-fundamentals.md
       - Linear Models: machine-learning/linear-models.md
+      - Regularization: machine-learning/regularization.md
       - Tree-Based Models: machine-learning/tree-based-models.md
   - Deep Learning:
       - Overview: deep-learning/index.md

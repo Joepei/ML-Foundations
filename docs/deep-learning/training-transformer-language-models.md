@@ -1,6 +1,11 @@
 # Training Transformer Language Models
 
-Training a transformer language model combines a prediction objective, an optimizer, a data loader, and a loop that coordinates forward passes, gradients, clipping, logging, validation, and checkpointing.
+Training a transformer language model combines:
+
+- A prediction objective.
+- An optimizer.
+- A data loader.
+- A loop that coordinates forward passes, gradients, clipping, logging, validation, and checkpointing.
 
 ## Next-Token Prediction
 

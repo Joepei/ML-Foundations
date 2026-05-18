@@ -14,7 +14,12 @@ A byte has 8 bits, so it can represent 256 values. ASCII characters use one byte
 
 ## Why Not Use Words Directly?
 
-Word-level tokenization creates short sequences, but the vocabulary can become huge. It also handles typos, new words, and morphology poorly. Words like `run`, `running`, and `runner` receive independent entries even though they share structure.
+Word-level tokenization has a clear tradeoff:
+
+- It creates short sequences.
+- The vocabulary can become huge.
+- It handles typos, new words, and morphology poorly.
+- Words like `run`, `running`, and `runner` receive independent entries even though they share structure.
 
 Byte-level tokenization solves out-of-vocabulary problems because any text can be represented as bytes. The cost is longer sequences, which make training slower and increase memory use.
 

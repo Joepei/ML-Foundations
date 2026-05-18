@@ -38,13 +38,35 @@ This is useful conceptually even when software uses more numerically stable meth
 
 The usual linear regression assumptions matter most for inference about coefficients. If the goal is only prediction, violations can still hurt, but the interpretation changes.
 
-Important assumptions include independent errors, roughly constant error variance, low multicollinearity, normality of errors for small-sample inference, and exogeneity:
+Important assumptions include:
+
+- Independent errors.
+- Roughly constant error variance.
+- Low multicollinearity.
+- Normality of errors for small-sample inference.
+- Exogeneity:
 
 \[
 E[\epsilon \mid X] = 0
 \]
 
-Diagnostic plots make these assumptions more concrete. Residual-versus-fitted plots check for bias patterns and changing variance. Q-Q plots check whether residuals are roughly normal. Residual-versus-leverage plots help identify influential points with unusual \(x\) values and large residuals.
+Diagnostic plots make these assumptions more concrete:
+
+- Residual-versus-fitted plots check for bias patterns and changing variance.
+- Q-Q plots check whether residuals are roughly normal.
+- Residual-versus-leverage plots help identify influential points with unusual \(x\) values and large residuals.
+
+Outliers hurt linear regression because squared error gives large residuals a large penalty. An unusual \(y\) value can dominate the loss, and an unusual \(x\) value can strongly pull the fitted line.
+
+The worst case is an influential point with both unusual \(x\) and unusual \(y\), because it can substantially change the coefficient estimates.
+
+## Feature Transformations
+
+Linear models can represent more than straight-line relationships if the features are transformed first:
+
+- Interaction terms: let the effect of one feature depend on another feature.
+- Polynomial features: let a linear model capture nonlinear relationships while staying linear in the coefficients.
+- Dummy variables: represent categorical variables with indicator features.
 
 ## Logistic Regression
 
@@ -62,6 +84,12 @@ p(y = 1 \mid x) = \sigma(w^\top x + b)
 
 One useful interpretation is multiplicative odds. If a feature increases the log-odds by a fixed amount, it multiplies the odds by a fixed factor.
 
+The sigmoid function maps any real-valued score into \((0, 1)\):
+
+\[
+\sigma(z) = \frac{1}{1 + e^{-z}}
+\]
+
 ## Log Loss and Thresholding
 
 Logistic regression is usually trained with cross-entropy, or log loss. For binary labels:
@@ -78,17 +106,30 @@ w^\top x + b = 0
 
 Changing the threshold changes the classification decision, but it does not change the underlying probability surface. This is why a model can improve in log loss but not necessarily improve a thresholded metric like accuracy, precision, or recall.
 
+Class imbalance changes how the model behaves. If one class is much more common, a model can lean heavily toward the majority class and still look decent on some metrics.
+
+Common responses:
+
+- Upweight the minority class in the loss.
+- Resample the data.
+- Tune the decision threshold on the validation set.
+- Use metrics such as precision, recall, F1, ROC-AUC, or PR-AUC instead of accuracy alone.
+
+Calibration is about whether predicted probabilities match actual frequencies. If a model assigns probability near 0.7 to many examples, then roughly 70% of those examples should be positive for the probabilities to be well calibrated.
+
 ## Regularization
 
 Regularization constrains model complexity so the fitted model is less sensitive to noise.
 
-L2 regularization penalizes large weights:
+Two common penalties:
+
+- L2 regularization penalizes large weights:
 
 \[
 \lambda \lVert w \rVert_2^2
 \]
 
-L1 regularization penalizes absolute weight values:
+- L1 regularization penalizes absolute weight values:
 
 \[
 \lambda \lVert w \rVert_1
