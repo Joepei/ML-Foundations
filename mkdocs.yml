@@ -1,6 +1,7 @@
 site_name: ML Foundations
 site_description: Technical writeups on machine learning fundamentals, transformer architectures, and implementation details.
 site_author: Joe Pei
+site_url: https://joepei.github.io/ML-Foundations/
 repo_name: Joepei/ML-Foundations
 repo_url: https://github.com/Joepei/ML-Foundations
 theme:
