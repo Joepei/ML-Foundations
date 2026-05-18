@@ -8,6 +8,8 @@ A decision tree learns a sequence of feature-based splits. Each split is chosen 
 
 The splitting process is greedy. At each node, the tree chooses the locally best split according to impurity reduction, without knowing whether that split will lead to the globally best full tree.
 
+This makes the problem tractable, but it can miss globally better trees. A split that looks suboptimal now might lead to better splits later, but searching all possible trees is too expensive.
+
 Common impurity measures:
 
 - Classification: Gini impurity or entropy.
@@ -26,9 +28,39 @@ I(D_t) -
 
 Here \(D_t\) is the parent node data, and \(D_L\), \(D_R\) are the left and right child node data.
 
+Gini impurity is:
+
+\[
+G = 1 - \sum_{k=1}^{K} p_k^2
+\]
+
+where \(p_k\) is the fraction of samples in class \(k\). It measures how scattered the classes are inside a node.
+
+Entropy is:
+
+\[
+H = -\sum_{k=1}^{K} p_k \log_2 p_k
+\]
+
+Entropy measures the average number of bits needed to encode the class label of a randomly drawn sample from that node, assuming an optimal coding scheme. The convention is \(0 \log 0 = 0\).
+
 Trees are flexible, but a single deep tree can overfit. It may learn idiosyncratic rules that describe the training set better than the underlying pattern.
 
 For regression trees, the prediction at each leaf is usually the mean target value of the training samples in that leaf. A split helps when it reduces the target variance inside the resulting leaves.
+
+For a regression tree, the impurity function is usually MSE within the node:
+
+\[
+\text{MSE}(D_t)
+= \frac{1}{|D_t|}
+\sum_{i \in D_t} (y_i - \bar{y}_t)^2
+\]
+
+where:
+
+\[
+\bar{y}_t = \frac{1}{|D_t|}\sum_{i \in D_t} y_i
+\]
 
 Trees also do not usually need feature scaling. The split only depends on the ordering of feature values and the impurity reduction, not the units of the feature.
 
@@ -40,7 +72,15 @@ Stopping criteria control tree complexity:
 - Min impurity decrease: split only if impurity reduction is large enough.
 - Max leaves: limit the total number of leaf nodes.
 
-Pruning is another way to control complexity. Instead of only stopping early, grow a larger tree and remove branches that do not improve validation performance enough.
+Pruning is another way to control complexity. Instead of only stopping early, grow a larger tree and remove branches afterwards.
+
+One pruning objective is cost-complexity:
+
+\[
+R_\alpha(T) = R(T) + \alpha \cdot |T|
+\]
+
+Here \(R(T)\) is the tree's error term, \(|T|\) is the size of the tree, and \(\alpha\) controls how much we penalize complexity. We can train trees with different \(\alpha\) values and choose the best one with cross-validation.
 
 Trees capture nonlinear effects because they partition feature space into regions. They capture interactions because later splits depend on earlier splits.
 
@@ -62,6 +102,20 @@ Random forests add two layers of randomness:
 - Feature subsampling: at each split, the tree only considers a random subset of features.
 
 This is why random forests are more stable than single trees. They average many plausible versions of the training process, so predictions become smoother.
+
+Variance reduction comes from two parts:
+
+- Decorrelation between trees.
+- Averaging many trees.
+
+Assuming each tree has variance \(\sigma^2\), the variance of the forest average can be written as:
+
+\[
+\operatorname{Var}\left(\frac{1}{B}\sum_{b=1}^{B} h_b(x)\right)
+= \rho \sigma^2 + \frac{1 - \rho}{B}\sigma^2
+\]
+
+The first term is controlled by correlation between trees. The second term shrinks as the number of trees increases.
 
 ## Out-of-Bag Validation
 
@@ -117,6 +171,13 @@ Important tuning knobs:
 - Learning rate and number of trees are usually tuned together. Smaller learning rates often need more trees.
 - Tree depth controls how complex each correction can be. Boosting often uses shallow trees because each tree is meant to be a small correction.
 - Overfitting shows up when training loss keeps improving but validation loss stops improving.
+
+Ways to control overfitting include:
+
+- Tune the learning rate and number of trees together.
+- Limit tree depth.
+- Regularize the number of leaves.
+- Increase minimum leaf size.
 
 At a high level:
 
