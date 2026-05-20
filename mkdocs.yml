@@ -46,6 +46,6 @@ nav:
       - Tree-Based Models: machine-learning/tree-based-models.md
   - Deep Learning:
       - Overview: deep-learning/index.md
-      - Tokenization and BPE: deep-learning/tokenization-and-bpe.md
+      - Tokenization and Byte-Pair Encoding: deep-learning/tokenization-and-bpe.md
       - Transformer Architecture: deep-learning/transformer-architecture.md
       - Training Transformer Language Models: deep-learning/training-transformer-language-models.md
