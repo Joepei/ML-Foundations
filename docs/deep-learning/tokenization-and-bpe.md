@@ -47,23 +47,11 @@ merges: list[tuple[bytes, bytes]]  # ordered merge pairs
 
 That means special tokens and merged tokens should also be stored as bytes:
 
-```python
-# Wrong: stores text, not bytes.
-self.vocab[token_id] = "<|endoftext|>"
-
-# Right.
-self.vocab[token_id] = "<|endoftext|>".encode("utf-8")
-```
+Wrong: `self.vocab[token_id] = "<|endoftext|>"` stores text. Right: `self.vocab[token_id] = "<|endoftext|>".encode("utf-8")` stores the bytes the tokenizer actually operates on.
 
 And merges should store the byte values associated with token IDs, not the integer IDs themselves:
 
-```python
-# Wrong: stores token IDs.
-self.merges.append(max_key)
-
-# Right: stores the byte strings being merged.
-self.merges.append((self.vocab[max_key[0]], self.vocab[max_key[1]]))
-```
+Wrong: `self.merges.append(max_key)` stores token IDs. Right: `self.merges.append((self.vocab[max_key[0]], self.vocab[max_key[1]]))` stores the byte strings being merged.
 
 ## Training Byte-Level BPE
 
@@ -82,13 +70,7 @@ At a high level:
 
 The new token must be represented by the new token ID, not by adding the two old IDs numerically:
 
-```python
-# Wrong: 104 + 101 = 205, which is just another integer.
-new_key.append(k[i] + k[i + 1])
-
-# Right: append the ID assigned to the merged token.
-new_key.append(new_token_id)
-```
+Wrong: `new_key.append(k[i] + k[i + 1])` turns two IDs into an unrelated integer, such as `104 + 101 = 205`. Right: `new_key.append(new_token_id)` appends the ID assigned to the merged token.
 
 The vocabulary entry for that new token is the concatenation of the underlying bytes:
 
@@ -198,11 +180,9 @@ Merge priority matters. The encoder should not simply merge left-to-right. It sh
 
 One subtle point is that initial bytes should be converted through the vocabulary, not assumed to equal their ASCII values:
 
-```python
-# Fragile: this gives raw byte values.
-tuple(m.group().encode("utf-8"))
+The fragile version is `tuple(m.group().encode("utf-8"))`, which gives raw byte values. The safer version maps each byte through the vocabulary:
 
-# Better: map each byte through the vocabulary.
+```python
 tuple(self.reverse_vocab[bytes([b])] for b in m.group().encode("utf-8"))
 ```
 
