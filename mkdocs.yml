@@ -49,3 +49,4 @@ nav:
       - Tokenization and Byte-Pair Encoding: deep-learning/tokenization-and-bpe.md
       - Transformer Architecture: deep-learning/transformer-architecture.md
       - Training Transformer Language Models: deep-learning/training-transformer-language-models.md
+      - GPU Systems and Utilization: deep-learning/gpu-and-tpu-systems.md

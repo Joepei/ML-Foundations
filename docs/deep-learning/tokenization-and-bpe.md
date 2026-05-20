@@ -4,13 +4,42 @@ Tokenization is the bridge between text and a language model. The model does not
 
 The basic chain is:
 
-```text
-text -> bytes -> token IDs -> embedding vectors
+```
+text -> token IDs -> embedding vectors
 ```
 
-The important design question is where to put the boundary between "raw text" and "model input." Character-level tokenization is simple but creates long sequences. Word-level tokenization creates shorter sequences, but the vocabulary can explode and every typo, rare word, or new word becomes a problem. Byte-level tokenization avoids out-of-vocabulary issues because any string can be represented as bytes, but it makes sequences longer than necessary.
+During training, each token gets its own learned embedding. A piece of text first becomes a list of \(n_\text{tokens}\) token IDs, then those IDs become a sequence of embedding vectors with shape roughly:
 
-Subword tokenization is the compromise. It keeps a small base vocabulary while learning frequent chunks from data. Common words or word pieces can become single tokens, while rare words can still be represented as smaller pieces.
+\[
+n_\text{tokens} \times d_\text{embedding}
+\]
+
+The important design question is where to put the boundary between "raw text" and "model input."
+
+Byte-level tokenization is the most universal option:
+
+```
+unhappiness -> (u, n, h, a, p, p, i, n, e, s, s)
+            -> (117, 110, 104, 97, 112, 112, 105, 110, 101, 115, 115)
+```
+
+The benefit is that there are no out-of-vocabulary tokens because any text can be represented as bytes. The cost is sequence length: an emoji can take several bytes, and long token sequences slow down training, use more memory, and make long-range patterns harder to learn.
+
+Word-level tokenization goes the other direction:
+
+```
+"happy unhappiness" -> ["happy", "unhappiness"]
+```
+
+This creates shorter sequences, but the vocabulary can become huge. It also handles typos, new words, and morphology poorly. Words like `run`, `running`, and `runner` get independent embeddings even though they clearly share structure.
+
+Subword tokenization is the compromise:
+
+```
+unhappiness -> [un, happi, ness]
+```
+
+Its vocabulary can range from single bytes to full words. Random or unseen text can still be represented, while frequent pieces become compact tokens. Usually we preset a vocabulary size and let the training data decide which subwords are frequent enough to add.
 
 ## The Type Triangle
 
@@ -55,7 +84,7 @@ Wrong: `self.merges.append(max_key)` stores token IDs. Right: `self.merges.appen
 
 ## Training Byte-Level BPE
 
-Byte-Pair Encoding starts with the 256 possible byte values, then repeatedly merges the most frequent adjacent pair into a new token.
+Byte-Pair Encoding starts with the 256 possible byte values, then repeatedly merges the most frequent adjacent pair into a new token. The goal is compression: frequent adjacent pieces become single tokens, which shortens the tokenized sequence.
 
 At a high level:
 
@@ -78,7 +107,7 @@ The vocabulary entry for that new token is the concatenation of the underlying b
 self.vocab[new_id] = self.vocab[max_key[0]] + self.vocab[max_key[1]]
 ```
 
-If two pairs have the same frequency, this implementation breaks ties lexicographically by the byte strings:
+If two pairs have the same frequency, this implementation prefers the lexicographically greater pair of byte strings:
 
 ```python
 max(self.pairs, key=lambda x: (self.pairs[x], self.vocab[x[0]], self.vocab[x[1]]))
@@ -86,7 +115,9 @@ max(self.pairs, key=lambda x: (self.pairs[x], self.vocab[x[0]], self.vocab[x[1]]
 
 ### Pre-Tokenization
 
-Pre-tokenization decides which spans BPE is allowed to merge inside. The pattern used here groups contractions, optional-leading-space words and numbers, punctuation-like runs, and whitespace:
+Pre-tokenization decides which spans BPE is allowed to merge inside. If BPE directly merged frequent consecutive bytes across the raw corpus, it could be both expensive and too sensitive to punctuation. For example, `dog.` and `dog!` might become separate tokens even though the useful shared piece is mostly `dog`.
+
+The pattern used here groups contractions, optional-leading-space words and numbers, punctuation-like runs, and whitespace:
 
 ```python
 PAT = r"""'(?:[sdmt]|ll|ve|re)| ?\p{L}+| ?\p{N}+| ?[^\s\p{L}\p{N}]+|\s+(?!\S)|\s+"""
@@ -192,7 +223,7 @@ In this tokenizer, the initial vocabulary maps `i` to `bytes([i])`, so the byte 
 
 Decoding goes the other direction:
 
-```text
+```
 token IDs -> bytes -> UTF-8 text
 ```
 
@@ -232,7 +263,7 @@ Tokenizer training belongs with the tokenizer, not the transformer training loop
 
 One useful experiment is comparing compression across tokenizers and datasets. For example:
 
-```text
+```
 bytes per token = total UTF-8 bytes / total tokens
 ```
 
