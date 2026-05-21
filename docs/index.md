@@ -2,7 +2,7 @@
 
 <p class="lead">Technical writeups on machine learning fundamentals, transformer architectures, and implementation details by Joe Pei.</p>
 
-This site is a public collection of technical essays on machine learning and deep learning. The goal is simple: explain core ideas carefully enough that the reasoning is visible.
+This site is a public collection of technical essays on machine learning and deep learning, with an emphasis on connecting intuition, math, and implementation details.
 
 ## Start Here
 
