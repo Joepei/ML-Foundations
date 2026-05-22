@@ -23,13 +23,13 @@ markdown_extensions:
   - admonition
   - attr_list
   - def_list
+  - fenced_code
   - footnotes
   - md_in_html
   - pymdownx.arithmatex:
       generic: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
-  - pymdownx.superfences
 extra_javascript:
   - javascripts/mathjax.js
   - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
@@ -50,3 +50,4 @@ nav:
       - Transformer Architecture: deep-learning/transformer-architecture.md
       - Training Transformer Language Models: deep-learning/training-transformer-language-models.md
       - GPU Systems and Utilization: deep-learning/gpu-and-tpu-systems.md
+      - Resource Accounting: deep-learning/resource-accounting.md
