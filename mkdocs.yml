@@ -41,6 +41,7 @@ nav:
   - Machine Learning:
       - Overview: machine-learning/index.md
       - Supervised Learning Fundamentals: machine-learning/supervised-learning-fundamentals.md
+      - Statistical Inference and Significance Tests: machine-learning/statistical-inference.md
       - Linear Models: machine-learning/linear-models.md
       - Regularization: machine-learning/regularization.md
       - Tree-Based Models: machine-learning/tree-based-models.md

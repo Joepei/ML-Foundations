@@ -49,13 +49,56 @@ Under the Gauss-Markov assumptions, OLS is BLUE: the best linear unbiased estima
 
 The usual linear regression assumptions matter most for inference about coefficients. If the goal is only prediction, violations can still hurt, but the interpretation changes.
 
+The standard setup writes the data-generating process as:
+
+\[
+y = X\beta + \epsilon
+\]
+
+where \(X\beta\) is the systematic part the model can explain, and \(\epsilon\) is the remaining noise.
+
 Important assumptions include:
 
-- Linearity: the conditional mean of \(y\) given \(x\) is linear. If this breaks, predictions are likely biased.
-- Independent errors: the errors are uncorrelated. If this breaks, coefficient estimates can still be unbiased, but significance tests can become overconfident because the data contains less independent information than it appears to.
-- Homoscedasticity: the variance of the errors is roughly constant around different values of \(x\). Intuitively, the "thickness" of the \(y\) values around the fitted line should be similar across the range of \(x\).
-- Low multicollinearity: no feature is a near-linear combination of other features. If this breaks, small changes in \(X\) can lead to large changes in coefficients.
-- Normality of errors for inference: mainly needed for exact small-sample inference, such as t-tests and confidence intervals.
+- Linearity: the conditional mean of \(y\) given \(X\) is linear:
+
+\[
+E[y \mid X] = X\beta
+\]
+
+If this breaks, predictions are likely biased.
+
+- Independent errors: the errors are uncorrelated across observations:
+
+\[
+\operatorname{Cov}(\epsilon_i, \epsilon_j \mid X) = 0 \quad \text{for } i \ne j
+\]
+
+If this breaks, coefficient estimates can still be unbiased, but significance tests can become overconfident because the data contains less independent information than it appears to.
+
+- Homoscedasticity: the variance of the errors is constant around different values of \(X\):
+
+\[
+\operatorname{Var}(\epsilon_i \mid X) = \sigma^2
+\]
+
+Intuitively, the "thickness" of the \(y\) values around the fitted line should be similar across the range of \(x\).
+
+- Low multicollinearity: no feature is a near-linear combination of other features. In matrix terms, the design matrix should have full column rank:
+
+\[
+\operatorname{rank}(X) = p
+\]
+
+where \(p\) is the number of columns/features. If this breaks, small changes in \(X\) can lead to large changes in coefficients.
+
+- Normality of errors (errors follow a normal distribution) 
+
+mainly needed for exact small-sample inference, such as t-tests and confidence intervals:
+
+\[
+\epsilon \mid X \sim \mathcal{N}(0, \sigma^2 I)
+\]
+
 - Exogeneity / zero conditional mean:
 
 \[
@@ -76,6 +119,26 @@ Leverage comes from the diagonal of the hat matrix. A high-leverage point has an
 Outliers hurt linear regression because squared error gives large residuals a large penalty. An unusual \(y\) value can dominate the loss, and an unusual \(x\) value can strongly pull the fitted line.
 
 The worst case is an influential point with both unusual \(x\) and unusual \(y\), because it can substantially change the coefficient estimates.
+
+## Coefficient Inference
+
+Linear regression is often used not just for prediction, but also to ask whether a feature has a detectable association with the target after controlling for the other features.
+
+For a coefficient \(\hat{\beta}_j\), the usual significance test starts from:
+
+\[
+H_0: \beta_j = 0
+\]
+
+The t-statistic compares the estimated coefficient to its standard error:
+
+\[
+t_j = \frac{\hat{\beta}_j}{SE(\hat{\beta}_j)}
+\]
+
+This is where the linear regression assumptions become important. The coefficient estimate can be unbiased while the uncertainty estimate is wrong. If errors are correlated, the dataset may look larger than it really is: 100 rows from 5 highly correlated groups can behave more like 5 independent pieces of information than 100. That can make the standard error too small, the t-statistic too large, and the coefficient significance test overconfident.
+
+Heteroscedasticity creates a related problem because the usual standard error formula may no longer describe the actual uncertainty of \(\hat{\beta}\). This is why residual diagnostics matter for inference, not just for prediction.
 
 ## Feature Transformations
 
